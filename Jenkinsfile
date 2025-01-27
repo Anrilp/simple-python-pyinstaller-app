@@ -14,10 +14,8 @@ node {
     }
 
     stage('Deliver') {
-        docker.image('python:3.8-alpine').inside('-u root') {
-        sh 'apk add --no-cache binutils'
-        sh 'pip install pyinstaller'
-        sh 'pyinstaller --onefile sources/add2vals.py'
+        docker.image('cdrx/pyinstaller-linux:python2').inside('--entrypoint=""') {
+            sh 'pyinstaller --onefile sources/add2vals.py'
         }
         archiveArtifacts artifacts: 'dist/add2vals', onlyIfSuccessful: true
     }
