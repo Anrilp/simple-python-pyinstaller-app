@@ -15,6 +15,7 @@ node {
 
     stage('Deliver') {
         docker.image('python:3.8-alpine').inside('-u root') {
+        sh 'apk add --no-cache binutils'
         sh 'pip install pyinstaller'
         sh 'pyinstaller --onefile sources/add2vals.py'
         }
