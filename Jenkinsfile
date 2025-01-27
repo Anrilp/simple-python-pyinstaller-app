@@ -14,7 +14,7 @@ node {
     }
 
     stage('Deliver') {
-        docker.image('python:3.8-alpine').inside('--entrypoint=""') {
+        docker.image('python:3.8-alpine').inside('-u root') {
         sh 'pip install pyinstaller'
         sh 'pyinstaller --onefile sources/add2vals.py'
         }
