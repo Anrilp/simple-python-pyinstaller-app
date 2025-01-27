@@ -13,11 +13,12 @@ node {
         junit 'test-reports/results.xml'
     }
 
-    stage('Deliver') {
-        docker.image('python:2-alpine').inside('--entrypoint=""') {
-        sh 'pyinstaller --onefile sources/add2vals.py'
-        }
-        archiveArtifacts artifacts: 'dist/add2vals', onlyIfSuccessful: true
+   stage('Deliver') {
+    docker.image('cdrx/pyinstaller-linux:python2').inside('--entrypoint=""') {
+        sh 'echo $PATH'
+        sh 'which pip || echo "pip not found"'
+        sh 'which pyinstaller || echo "pyinstaller not found"'
     }
+}
 
 }
