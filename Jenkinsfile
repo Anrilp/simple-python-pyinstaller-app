@@ -13,12 +13,17 @@ node {
         junit 'test-reports/results.xml'
     }
 
-    stage('Deliver') {
+    stage('Manual Approval')  {         
+        input message: 'Lanjutkan ke tahap Deploy? (Klik "Proceed" untuk melanjutkan ke tahap Deploy)'     
+    }
+
+    stage('Deploy') {
         docker.image('python:3.8-alpine').inside('-u root') {
         sh 'apk add --no-cache binutils'
         sh 'pip install pyinstaller'
         sh 'pyinstaller --onefile sources/add2vals.py'
         }
         archiveArtifacts artifacts: 'dist/add2vals', onlyIfSuccessful: true
+        sleep time: 1, unit: 'MINUTES'
     }
 }
