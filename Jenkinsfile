@@ -22,8 +22,8 @@ node {
         sh 'apk add --no-cache binutils'
         sh 'pip install pyinstaller'
         sh 'pyinstaller --onefile sources/add2vals.py'
+        sh 'sleep 60 & wait'
         }
         archiveArtifacts artifacts: 'dist/add2vals', onlyIfSuccessful: true
-        sleep time: 1, unit: 'MINUTES'
     }
 }
