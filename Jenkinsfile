@@ -23,13 +23,12 @@ node {
         sh 'pip install pyinstaller'
         sh 'pyinstaller --onefile sources/add2vals.py'
 
-        sh '''
-            rm -rf /var/cache/apk/*
-            apk update
-            apk info | grep lftp
-        '''
-
-        sh 'lftp --version'
+        withCredentials([usernamePassword(credentialsId: 'cpanel-user', usernameVariable: 'FTP_USER', passwordVariable: 'FTP_PASS')]) {
+            sh """
+            echo "Testing FTP Connection..."
+            lftp -u $FTP_USER,$FTP_PASS -e "ls; bye" ftp://ftpupload.net
+            """
+        }
         }
         archiveArtifacts artifacts: 'dist/add2vals', onlyIfSuccessful: true
 
