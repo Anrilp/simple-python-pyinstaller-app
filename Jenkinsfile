@@ -24,15 +24,22 @@ node {
         sh 'pyinstaller --onefile sources/add2vals.py'
 
         withCredentials([usernamePassword(credentialsId: 'cpanel-user', usernameVariable: 'FTP_USER', passwordVariable: 'FTP_PASS')]) {
+            sh '''#!/bin/sh
+                echo "Uploading file to FTP..."
+                lftp -u "$FTP_USER","$FTP_PASS" ftp://ftpupload.net <<EOF
+                cd htdocs
+                put dist/add2vals
+                bye
+                EOF
+            '''
+            
             sh """
-            echo "Testing FTP Connection..."
-            lftp -u $FTP_USER,$FTP_PASS -e "ls; bye" ftp://ftpupload.net
+            echo "Check File Succes Upload..."
+            lftp -u $FTP_USER,$FTP_PASS -e "ls htdocs; bye" ftp://ftpupload.net
             """
         }
+        sh 'sleep 60 & wait'
         }
         archiveArtifacts artifacts: 'dist/add2vals', onlyIfSuccessful: true
-
-        
-        // sleep time: 1, unit: 'MINUTES'
     }
 }
