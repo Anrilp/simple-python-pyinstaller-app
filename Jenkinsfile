@@ -25,6 +25,11 @@ node {
 
         withCredentials([usernamePassword(credentialsId: 'cpanel-user', usernameVariable: 'FTP_USER', passwordVariable: 'FTP_PASS')]) {
             sh '''#!/bin/sh
+            echo "Check File Before Upload..."
+            lftp -u $FTP_USER,$FTP_PASS -e "ls htdocs; bye" ftp://ftpupload.net
+            '''
+            
+            sh '''#!/bin/sh
                 echo "Uploading file to FTP..."
                 lftp -u "$FTP_USER","$FTP_PASS" ftp://ftpupload.net <<EOF
                 cd htdocs
@@ -33,10 +38,10 @@ node {
                 EOF
             '''
             
-            sh """
-            echo "Check File Succes Upload..."
+            sh '''#!/bin/sh
+            echo "Check File After Upload..."
             lftp -u $FTP_USER,$FTP_PASS -e "ls htdocs; bye" ftp://ftpupload.net
-            """
+            '''
         }
         sh 'sleep 60 & wait'
         }
