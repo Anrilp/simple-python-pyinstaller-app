@@ -23,8 +23,13 @@ node {
         sh 'pip install pyinstaller'
         sh 'pyinstaller --onefile sources/add2vals.py'
 
-        sh 'apk info | grep lftp'
-        sh 'which lftp'
+        sh '''
+            rm -rf /var/cache/apk/*
+            apk update
+            apk info | grep lftp
+        '''
+
+        sh 'lftp --version'
         }
         archiveArtifacts artifacts: 'dist/add2vals', onlyIfSuccessful: true
 
